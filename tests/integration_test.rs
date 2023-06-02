@@ -99,6 +99,6 @@ fn invalid_arguments() -> Result<()> {
         let exit_status = mini_grep.status;
 
         assert!(stderr.contains(r#"Valid arguments are "Query" "File Path""#));
-        assert!(exit_status.success());
+        assert!(!exit_status.success());
     })
 }

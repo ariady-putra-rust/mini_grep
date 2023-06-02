@@ -1,5 +1,5 @@
 use minigrep_lib::*;
-use std::{env, io::Result};
+use std::{env, io::Result, process::exit};
 
 // CASE_SENSITIVE=1 cargo run -- [QUERY] [FILE_PATH]
 
@@ -52,4 +52,5 @@ fn process_args(args: &Vec<String>) -> Option<(Query, Path)> {
 
 fn show_usage() {
     eprintln!(r#"Valid arguments are "Query" "File Path""#);
+    exit(-1);
 }
