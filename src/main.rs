@@ -36,7 +36,7 @@ fn env_var_case_sensitive() -> bool {
         Err(x) => {
             eprintln!(
                 r#"{CASE_SENSITIVE} {x}, defaulting to CASE_INSENSITIVE
-run with `{CASE_SENSITIVE}=1` to search with case sensitivity"#
+run with `{CASE_SENSITIVE}=1` to search with case sensitivity enabled"#
             ); // print to stderr
             return false;
         }

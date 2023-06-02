@@ -82,7 +82,7 @@ fn without_environment_variable() -> Result<()> {
         // Assert
         assert!(stderr.contains(
             r#"CASE_SENSITIVE environment variable not found, defaulting to CASE_INSENSITIVE
-run with `CASE_SENSITIVE=1` to search with case sensitivity"#
+run with `CASE_SENSITIVE=1` to search with case sensitivity enabled"#
         ));
         assert!(exit_status.success());
     })
