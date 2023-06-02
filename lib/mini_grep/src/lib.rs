@@ -7,28 +7,25 @@ pub fn mini_grep<Query: AsRef<str>, Path: AsRef<str>>(
     file_path: &Path,
     case_sensitive: bool,
 ) -> Result<Lines> {
-    let query = query.as_ref();
-    let file_path = file_path.as_ref();
+    let query = if case_sensitive {
+        query.as_ref().to_string()
+    } else {
+        query.as_ref().to_uppercase()
+    };
 
-    let mut lines = vec![];
-    for line in file_path.as_file().read_lines()? {
-        let normalized_line = if case_sensitive {
-            format!("{line}") // borrow {line}
-        } else {
-            format!("{}", line.to_uppercase())
-        };
-        let normalized_query = if case_sensitive {
-            query.to_string()
-        } else {
-            query.to_uppercase()
-        };
-
-        if normalized_line.contains(&normalized_query) {
-            lines.push(line);
-        }
-    }
-
-    return Ok(lines);
+    return Ok(file_path
+        .as_file()
+        .read_lines()?
+        .into_iter()
+        .filter(|p| {
+            if case_sensitive {
+                p.to_string()
+            } else {
+                p.to_uppercase()
+            }
+            .contains(&query)
+        })
+        .collect());
 }
 
 #[cfg(test)]
@@ -46,11 +43,14 @@ mod tests {
             let search_result = mini_grep(&query, &file_path, false)?;
 
             // Assert
-            assert!(
-                search_result
-                    .iter()
-                    .all(|hit| hit.to_uppercase().contains(&query.to_uppercase())),
-                "all must contain query"
+            assert_eq!(
+                search_result,
+                vec![
+                    "Are you nobody, too?",
+                    "How dreary to be somebody!",
+                    "To tell your name the livelong day",
+                    "To an admiring bog!",
+                ]
             );
         })
     }
@@ -66,9 +66,9 @@ mod tests {
             let search_result = mini_grep(&query, &file_path, true)?;
 
             // Assert
-            assert!(
-                search_result.iter().all(|hit| hit.contains(&query)),
-                "all must contain query"
+            assert_eq!(
+                search_result,
+                vec!["Are you nobody, too?", "How dreary to be somebody!"]
             );
         })
     }
