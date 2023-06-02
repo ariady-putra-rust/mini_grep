@@ -17,11 +17,11 @@ pub fn mini_grep<Query: AsRef<str>, Path: AsRef<str>>(
         .as_file()
         .read_lines()?
         .into_iter()
-        .filter(|p| {
+        .filter(|line| {
             if case_sensitive {
-                p.to_string()
+                line.to_string()
             } else {
-                p.to_uppercase()
+                line.to_uppercase()
             }
             .contains(&query)
         })
@@ -43,15 +43,13 @@ mod tests {
             let search_result = mini_grep(&query, &file_path, false)?;
 
             // Assert
-            assert_eq!(
-                search_result,
-                vec![
-                    "Are you nobody, too?",
-                    "How dreary to be somebody!",
-                    "To tell your name the livelong day",
-                    "To an admiring bog!",
-                ]
-            );
+            let expect = vec![
+                "Are you nobody, too?",
+                "How dreary to be somebody!",
+                "To tell your name the livelong day",
+                "To an admiring bog!",
+            ];
+            assert_eq!(search_result, expect);
         })
     }
 
@@ -66,10 +64,8 @@ mod tests {
             let search_result = mini_grep(&query, &file_path, true)?;
 
             // Assert
-            assert_eq!(
-                search_result,
-                vec!["Are you nobody, too?", "How dreary to be somebody!"]
-            );
+            let expect = vec!["Are you nobody, too?", "How dreary to be somebody!"];
+            assert_eq!(search_result, expect);
         })
     }
 }
