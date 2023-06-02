@@ -92,13 +92,18 @@ run with `CASE_SENSITIVE=1` to search with case sensitivity"#
 fn invalid_arguments() -> Result<()> {
     Ok({
         let mini_grep = Command::new("cargo").arg("run").output()?;
+
         let stderr = match String::from_utf8(mini_grep.stderr) {
             Err(x) => return Err(Error::new(ErrorKind::InvalidData, x)),
             Ok(s) => s,
         };
-        let exit_status = mini_grep.status;
-
         assert!(stderr.contains(r#"Valid arguments are "Query" "File Path""#));
-        assert!(!exit_status.success());
+
+        let exit_status = match mini_grep.status.code() {
+            None => return Err(Error::new(ErrorKind::Other, "Process terminated by signal")),
+            Some(i) => i,
+        };
+        let expect = -1;
+        assert_eq!(exit_status as u8, expect as u8);
     })
 }
