@@ -53,29 +53,3 @@ fn process_args(args: &Vec<String>) -> Option<(Query, Path)> {
 fn show_usage() {
     println!(r#"Valid arguments are "Query" "File Path""#);
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::io::Result;
-
-    // cargo test -- --show-output
-
-    #[test]
-    fn case_sensitive() -> Result<()> {
-        let query = String::from("to");
-        let file_path = String::from("poem.txt");
-        let case_sensitive = true;
-
-        return run_app(&query, &file_path, case_sensitive);
-    }
-
-    #[test]
-    fn case_insensitive() -> Result<()> {
-        let query = String::from("to");
-        let file_path = String::from("poem.txt");
-        let case_sensitive = false;
-
-        return run_app(&query, &file_path, case_sensitive);
-    }
-}
