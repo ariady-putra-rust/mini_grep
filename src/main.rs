@@ -51,5 +51,5 @@ fn process_args(args: &Vec<String>) -> Option<(Query, Path)> {
 }
 
 fn show_usage() {
-    println!(r#"Valid arguments are "Query" "File Path""#);
+    eprintln!(r#"Valid arguments are "Query" "File Path""#);
 }
